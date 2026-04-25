@@ -10,71 +10,48 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #07060f;
-      --accent: #b06aff;
-      --accent-dim: #6a3aaa;
-      --text: #ede8f8;
-      --text-mid: #9a88c0;
-      --text-dim: #4a3a6a;
-      --card: rgba(30, 18, 55, 0.7);
-      --card-active: rgba(90, 40, 160, 0.18);
-      --border: rgba(80, 50, 130, 0.35);
-      --border-active: rgba(160, 100, 255, 0.4);
+      --bg: #07060f; --accent: #b06aff; --accent-dim: #6a3aaa;
+      --text: #ede8f8; --text-mid: #9a88c0; --text-dim: #4a3a6a;
+      --card: rgba(30,18,55,0.7); --card-active: rgba(90,40,160,0.18);
+      --border: rgba(80,50,130,0.35); --border-active: rgba(160,100,255,0.4);
       --danger: #c04070;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      font-family: 'Lato', sans-serif;
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
+    html, body { height: 100%; background: var(--bg); font-family: 'Lato', sans-serif; color: var(--text); overflow-x: hidden; }
     body {
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 0);
+      min-height: 100vh; min-height: -webkit-fill-available;
+      padding: env(safe-area-inset-top,20px) env(safe-area-inset-right,0) env(safe-area-inset-bottom,20px) env(safe-area-inset-left,0);
       background: radial-gradient(ellipse at 50% 0%, #1a0a30 0%, #07060f 60%);
     }
+    .app { display: flex; flex-direction: column; align-items: center; padding: 28px 20px 60px; min-height: 100vh; }
 
-    .app {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 28px 20px 60px;
-      min-height: 100vh;
+    /* Session bar */
+    .session-bar {
+      display: none; width: 100%; max-width: 420px;
+      background: rgba(100,50,180,0.15); border: 1px solid var(--border-active);
+      border-radius: 10px; padding: 8px 14px; margin-bottom: 14px;
+      align-items: center; justify-content: space-between;
     }
+    .session-bar-left { display: flex; align-items: center; gap: 8px; }
+    .session-dot { width: 6px; height: 6px; border-radius: 50%; background: #80ffb0; box-shadow: 0 0 8px rgba(80,255,120,0.7); animation: blink 2s ease-in-out infinite; }
+    .session-code { font-size: 11px; letter-spacing: 0.12em; color: var(--text-mid); }
+    .session-code span { color: #c0a0ff; font-weight: 400; letter-spacing: 0.18em; }
+    .btn-leave { background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 3px 9px; border-radius: 4px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
 
     .header { text-align: center; margin-bottom: 6px; }
     .header-label { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
     .header-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 32px; letter-spacing: 0.04em; color: var(--text); }
 
-    /* Rolling window panels */
     .windows { display: flex; gap: 10px; margin: 18px 0 28px; width: 100%; max-width: 420px; }
-    .window-card {
-      flex: 1; background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 10px 10px;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .window-label {
-      font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--text-dim); text-align: center; padding-bottom: 6px;
-      border-bottom: 1px solid rgba(80,50,130,0.25);
-    }
+    .window-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 10px 10px; display: flex; flex-direction: column; gap: 8px; }
+    .window-label { font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); text-align: center; padding-bottom: 6px; border-bottom: 1px solid rgba(80,50,130,0.25); }
     .window-stats { display: flex; justify-content: space-around; }
     .wstat { text-align: center; }
-    .wstat-value {
-      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400;
-      color: var(--accent); line-height: 1;
-    }
+    .wstat-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--accent); line-height: 1; }
     .wstat-label { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
 
     .btn-wrap { position: relative; margin-bottom: 22px; }
-
-    .ripple-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(180, 100, 255, 0.25); pointer-events: none; opacity: 0; }
+    .ripple-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(180,100,255,0.25); pointer-events: none; opacity: 0; }
     .ripple-ring.r1 { inset: -18px; }
     .ripple-ring.r2 { inset: -38px; }
     body.active .ripple-ring.r1 { animation: ripple 2s ease-out infinite; }
@@ -83,21 +60,16 @@
 
     #main-btn {
       width: 210px; height: 210px; border-radius: 50%;
-      border: 2px solid rgba(130, 90, 200, 0.4);
+      border: 2px solid rgba(130,90,200,0.4);
       background: radial-gradient(circle at 38% 34%, #22124a, #100820);
       color: var(--text); cursor: pointer;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
       position: relative; z-index: 1;
-      box-shadow: 0 0 40px rgba(80, 30, 160, 0.2), inset 0 0 24px rgba(60, 20, 100, 0.18);
+      box-shadow: 0 0 40px rgba(80,30,160,0.2), inset 0 0 24px rgba(60,20,100,0.18);
       transition: border-color 0.35s, background 0.35s, box-shadow 0.35s;
       -webkit-appearance: none; outline: none; touch-action: manipulation;
     }
-    body.active #main-btn {
-      border-color: rgba(190, 130, 255, 0.55);
-      background: radial-gradient(circle at 38% 34%, #5a2090, #250a50);
-      box-shadow: 0 0 70px rgba(150, 60, 255, 0.38), inset 0 0 30px rgba(100, 30, 200, 0.25);
-    }
-
+    body.active #main-btn { border-color: rgba(190,130,255,0.55); background: radial-gradient(circle at 38% 34%, #5a2090, #250a50); box-shadow: 0 0 70px rgba(150,60,255,0.38), inset 0 0 30px rgba(100,30,200,0.25); }
     .btn-top { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); transition: color 0.35s; }
     body.active .btn-top { color: #c8a0ff; }
     .btn-main { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; line-height: 1; color: #c8b0f0; transition: color 0.35s; min-width: 120px; text-align: center; }
@@ -105,100 +77,79 @@
     .btn-sub { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); transition: color 0.35s; }
     body.active .btn-sub { color: #9868c8; }
 
-    .status { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; height: 18px; }
+    .status { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; height: 18px; }
     .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); transition: background 0.3s, box-shadow 0.3s; }
-    body.active .dot { background: var(--accent); box-shadow: 0 0 10px rgba(180, 80, 255, 0.8); animation: blink 1s ease-in-out infinite; }
+    body.active .dot { background: var(--accent); box-shadow: 0 0 10px rgba(180,80,255,0.8); animation: blink 1s ease-in-out infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .status-text { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); transition: color 0.3s; }
     body.active .status-text { color: var(--accent-dim); }
 
+    .no-session-msg { font-size: 11px; color: var(--text-dim); letter-spacing: 0.06em; margin-bottom: 20px; text-align: center; }
+    .no-session-msg button { background: none; border: none; color: var(--accent-dim); text-decoration: underline; cursor: pointer; font-size: 11px; font-family: 'Lato', sans-serif; letter-spacing: 0.06em; }
+
     .history-wrap { width: 100%; max-width: 420px; }
     .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .history-title { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim); }
-    .btn-row { display: flex; gap: 8px; }
-    .btn-small {
-      background: none; border: 1px solid var(--text-dim); color: var(--text-dim);
-      padding: 4px 12px; border-radius: 4px; font-size: 9px; letter-spacing: 0.12em;
-      text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation;
-    }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-small { background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 4px 12px; border-radius: 4px; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
     .btn-small:active { color: var(--text-mid); border-color: var(--text-mid); }
 
     .col-heads { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; padding: 0 10px 6px; }
     .col-head { font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
-
     .history-list { display: flex; flex-direction: column; gap: 6px; }
-
-    .contraction-row {
-      display: grid; grid-template-columns: 1fr 1fr 1fr 44px;
-      gap: 6px; padding: 10px 6px 10px 10px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; align-items: center;
-    }
+    .contraction-row { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 6px; padding: 10px 6px 10px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; align-items: center; }
     .contraction-row.newest { background: var(--card-active); border-color: var(--border-active); }
-
     .cell { text-align: center; }
     .cell-main { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--text-mid); line-height: 1.1; }
     .contraction-row.newest .cell-main { color: #d0a0ff; }
     .cell-time { font-size: 12px; color: var(--text-mid); }
     .cell-freq { font-size: 13px; color: var(--text-dim); }
-
     .row-actions { display: flex; flex-direction: column; gap: 2px; align-items: center; }
-    .btn-icon {
-      background: none; border: none; cursor: pointer; padding: 5px 6px;
-      font-size: 15px; line-height: 1; touch-action: manipulation;
-      border-radius: 5px; opacity: 0.45; transition: opacity 0.15s;
-    }
+    .btn-icon { background: none; border: none; cursor: pointer; padding: 5px 6px; font-size: 15px; line-height: 1; touch-action: manipulation; border-radius: 5px; opacity: 0.45; transition: opacity 0.15s; }
     .btn-icon:active { opacity: 1; }
     .btn-icon.edit { color: var(--text-mid); }
     .btn-icon.del { color: var(--danger); }
 
-    /* Modals */
-    .modal-bg {
-      display: none; position: fixed; inset: 0;
-      background: rgba(5, 3, 15, 0.88); z-index: 100;
-      align-items: flex-end; justify-content: center;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(5,3,15,0.88); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: env(safe-area-inset-bottom,0); }
     .modal-bg.open { display: flex; }
-    .modal {
-      background: #130d28; border: 1px solid var(--border-active);
-      border-radius: 18px 18px 0 0; width: 100%; max-width: 480px;
-      padding: 24px 20px 32px;
-    }
+    .modal { background: #130d28; border: 1px solid var(--border-active); border-radius: 18px 18px 0 0; width: 100%; max-width: 480px; padding: 24px 20px 32px; }
     .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; margin-bottom: 16px; color: var(--text); }
     .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
-
     .btn-primary { flex: 1; padding: 13px; background: var(--accent-dim); border: none; border-radius: 10px; color: var(--text); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
     .btn-secondary { padding: 13px 18px; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--text-mid); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
     .btn-danger { flex: 1; padding: 13px; background: var(--danger); border: none; border-radius: 10px; color: var(--text); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
+    .btn-outline { flex: 1; padding: 13px; background: none; border: 1px solid var(--accent-dim); border-radius: 10px; color: var(--accent); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; }
 
-    .export-text {
-      background: #0a0618; border: 1px solid var(--border); border-radius: 8px;
-      padding: 12px; font-size: 12px; color: var(--text-mid); line-height: 1.7;
-      white-space: pre-wrap; word-break: break-word; max-height: 240px; overflow-y: auto;
-      font-family: 'Lato', monospace;
-    }
-
+    .export-text { background: #0a0618; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text-mid); line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 240px; overflow-y: auto; font-family: 'Lato', monospace; }
     .field-group { margin-bottom: 16px; }
     .field-label { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
     .field-row { display: flex; gap: 6px; align-items: center; }
-    .field-input {
-      background: #0a0618; border: 1px solid var(--border); border-radius: 8px;
-      padding: 10px 4px; color: var(--text); font-size: 18px;
-      font-family: 'Lato', sans-serif; width: 58px; text-align: center;
-      outline: none; -webkit-appearance: none;
-    }
+    .field-input { background: #0a0618; border: 1px solid var(--border); border-radius: 8px; padding: 10px 4px; color: var(--text); font-size: 18px; font-family: 'Lato', sans-serif; width: 58px; text-align: center; outline: none; -webkit-appearance: none; }
     .field-input:focus { border-color: var(--accent-dim); }
     .field-input.wide { width: 68px; font-size: 16px; }
+    .field-input.code { width: 100%; font-size: 28px; letter-spacing: 0.3em; text-align: center; padding: 14px; }
     .field-sep { color: var(--text-dim); font-size: 20px; padding: 0 2px; }
     .field-hint { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
-
     .del-msg { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
     .del-detail { margin-top: 8px; font-size: 12px; color: var(--text-dim); }
+    .session-option { background: rgba(80,40,140,0.2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s; }
+    .session-option:active { border-color: var(--accent-dim); }
+    .session-option-title { font-size: 14px; color: var(--text); margin-bottom: 4px; }
+    .session-option-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+    .session-divider { text-align: center; font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin: 4px 0 10px; }
   </style>
 </head>
 <body>
 <div class="app">
+
+  <!-- Session bar -->
+  <div class="session-bar" id="session-bar">
+    <div class="session-bar-left">
+      <div class="session-dot"></div>
+      <div class="session-code">Live · Code: <span id="session-code-display"></span></div>
+    </div>
+    <button class="btn-leave" onclick="leaveSession()">Leave</button>
+  </div>
 
   <div class="header">
     <div class="header-label">Labor &amp; Delivery</div>
@@ -209,35 +160,17 @@
     <div class="window-card">
       <div class="window-label">Past 1 Hour</div>
       <div class="window-stats">
-        <div class="wstat">
-          <div class="wstat-value" id="w1-count">--</div>
-          <div class="wstat-label">Count</div>
-        </div>
-        <div class="wstat">
-          <div class="wstat-value" id="w1-dur">--</div>
-          <div class="wstat-label">Avg Dur</div>
-        </div>
-        <div class="wstat">
-          <div class="wstat-value" id="w1-freq">--</div>
-          <div class="wstat-label">Avg Freq</div>
-        </div>
+        <div class="wstat"><div class="wstat-value" id="w1-count">--</div><div class="wstat-label">Count</div></div>
+        <div class="wstat"><div class="wstat-value" id="w1-dur">--</div><div class="wstat-label">Avg Dur</div></div>
+        <div class="wstat"><div class="wstat-value" id="w1-freq">--</div><div class="wstat-label">Avg Freq</div></div>
       </div>
     </div>
     <div class="window-card">
       <div class="window-label">Past 2 Hours</div>
       <div class="window-stats">
-        <div class="wstat">
-          <div class="wstat-value" id="w2-count">--</div>
-          <div class="wstat-label">Count</div>
-        </div>
-        <div class="wstat">
-          <div class="wstat-value" id="w2-dur">--</div>
-          <div class="wstat-label">Avg Dur</div>
-        </div>
-        <div class="wstat">
-          <div class="wstat-value" id="w2-freq">--</div>
-          <div class="wstat-label">Avg Freq</div>
-        </div>
+        <div class="wstat"><div class="wstat-value" id="w2-count">--</div><div class="wstat-label">Count</div></div>
+        <div class="wstat"><div class="wstat-value" id="w2-dur">--</div><div class="wstat-label">Avg Dur</div></div>
+        <div class="wstat"><div class="wstat-value" id="w2-freq">--</div><div class="wstat-label">Avg Freq</div></div>
       </div>
     </div>
   </div>
@@ -257,7 +190,11 @@
     <span class="status-text" id="status-text">Waiting</span>
   </div>
 
-  <div id="import-hint" style="margin-bottom:20px;">
+  <div id="no-session-hint" class="no-session-msg" style="display:none;">
+    No active session. <button onclick="openSessionModal()">Start or join one</button> to begin.
+  </div>
+
+  <div id="import-hint" style="margin-bottom:20px; display:none;">
     <button class="btn-small" onclick="openImport()" style="opacity:0.6;">Import from older version</button>
   </div>
 
@@ -281,6 +218,26 @@
 
 </div>
 
+<!-- Session modal -->
+<div class="modal-bg" id="modal-session" onclick="closeModalOutside(event,'modal-session')">
+  <div class="modal">
+    <div class="modal-title">Shared Session</div>
+    <div class="session-option" onclick="startNewSession()">
+      <div class="session-option-title">✦ Start a new session</div>
+      <div class="session-option-desc">Generates a 6-digit code you share with your partner so they can view in real time.</div>
+    </div>
+    <div class="session-divider">— or join an existing one —</div>
+    <div class="field-group">
+      <input class="field-input code" id="session-input" type="number" placeholder="123456" maxlength="6" />
+      <div class="field-hint" id="session-msg" style="text-align:center;min-height:16px;margin-top:8px;font-size:11px;"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="joinSessionFromInput()">Join Session</button>
+      <button class="btn-secondary" onclick="closeModal('modal-session')">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Export modal -->
 <div class="modal-bg" id="modal-export" onclick="closeModalOutside(event,'modal-export')">
   <div class="modal">
@@ -297,15 +254,8 @@
 <div class="modal-bg" id="modal-import" onclick="closeModalOutside(event,'modal-import')">
   <div class="modal">
     <div class="modal-title">Import Log</div>
-    <div class="field-hint" style="margin-bottom:12px;font-size:12px;color:var(--text-mid);line-height:1.6;">
-      Paste the exported text from your old version below. Existing entries will be merged — duplicates skipped.
-    </div>
-    <textarea id="import-text" placeholder="Paste exported log here…" style="
-      width:100%; height:160px; background:#0a0618; border:1px solid var(--border);
-      border-radius:8px; padding:12px; color:var(--text); font-size:13px;
-      font-family:'Lato',sans-serif; resize:none; outline:none;
-      line-height:1.6;
-    "></textarea>
+    <div class="field-hint" style="margin-bottom:12px;font-size:12px;color:var(--text-mid);line-height:1.6;">Paste the exported text from your old version below. Existing entries will be merged — duplicates skipped.</div>
+    <textarea id="import-text" placeholder="Paste exported log here…" style="width:100%;height:160px;background:#0a0618;border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-size:13px;font-family:'Lato',sans-serif;resize:none;outline:none;line-height:1.6;"></textarea>
     <div id="import-msg" style="font-size:11px;margin-top:8px;min-height:16px;color:var(--text-dim);"></div>
     <div class="modal-btns">
       <button class="btn-primary" onclick="doImport()">Import</button>
@@ -313,10 +263,11 @@
     </div>
   </div>
 </div>
+
+<!-- Edit modal -->
 <div class="modal-bg" id="modal-edit" onclick="closeModalOutside(event,'modal-edit')">
   <div class="modal">
     <div class="modal-title">Edit Contraction</div>
-
     <div class="field-group">
       <div class="field-label">Start Time</div>
       <div class="field-row">
@@ -329,7 +280,6 @@
       </div>
       <div class="field-hint">Hour &nbsp;·&nbsp; Min &nbsp;·&nbsp; Sec &nbsp;·&nbsp; AM/PM</div>
     </div>
-
     <div class="field-group">
       <div class="field-label">Duration</div>
       <div class="field-row">
@@ -340,7 +290,6 @@
       </div>
       <div class="field-hint">Minutes &nbsp;·&nbsp; Seconds</div>
     </div>
-
     <div class="modal-btns">
       <button class="btn-primary" onclick="saveEdit()">Save</button>
       <button class="btn-secondary" onclick="closeModal('modal-edit')">Cancel</button>
@@ -361,35 +310,126 @@
   </div>
 </div>
 
-<script>
-  const STORAGE_KEY = 'contraction-timer-v2';
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, set, remove, onValue, off } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+  const FIREBASE_URL = 'https://contraction-timer-fb5c3-default-rtdb.firebaseio.com';
+  const LOCAL_KEY = 'contraction-session-v1';
+
+  const app = initializeApp({ databaseURL: FIREBASE_URL });
+  const db  = getDatabase(app);
+
   let phase = 'idle', startTime = null, elapsed = 0, tickInterval = null;
   let contractions = [];
   let editingId = null, deletingId = null;
+  let sessionCode = null, dbListener = null;
 
-  try { const s = localStorage.getItem(STORAGE_KEY); if (s) contractions = JSON.parse(s); } catch(e) {}
+  // ── Session ──────────────────────────────────────────────────────────────
+  function loadSavedSession() {
+    try { return JSON.parse(localStorage.getItem(LOCAL_KEY)); } catch(e) { return null; }
+  }
+  function persistSession(code) {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify({ code })); } catch(e) {}
+  }
 
-  function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(contractions)); } catch(e) {} }
+  function joinSession(code) {
+    if (dbListener) off(ref(db, 'sessions/' + sessionCode));
+    sessionCode = code;
+    persistSession(code);
+    document.getElementById('session-code-display').textContent = code;
+    document.getElementById('session-bar').style.display = 'flex';
+    document.getElementById('no-session-hint').style.display = 'none';
 
+    const sessionRef = ref(db, 'sessions/' + code);
+    dbListener = onValue(sessionRef, snap => {
+      const data = snap.val();
+      contractions = data ? Object.values(data).sort((a,b) => b.startTimestamp - a.startTimestamp) : [];
+      recomputeFrequencies();
+      render();
+    });
+  }
+
+  window.leaveSession = function() {
+    if (!confirm('Leave this session? Your data stays in Firebase — rejoin with the same code anytime.')) return;
+    if (dbListener) { off(ref(db, 'sessions/' + sessionCode)); dbListener = null; }
+    sessionCode = null;
+    try { localStorage.removeItem(LOCAL_KEY); } catch(e) {}
+    contractions = [];
+    document.getElementById('session-bar').style.display = 'none';
+    render();
+  };
+
+  window.openSessionModal = function() {
+    document.getElementById('session-input').value = '';
+    document.getElementById('session-msg').textContent = '';
+    openModal('modal-session');
+  };
+
+  window.startNewSession = function() {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    document.getElementById('session-input').value = code;
+    document.getElementById('session-msg').style.color = '#c0a0ff';
+    document.getElementById('session-msg').textContent = 'Code generated! Share it with your partner, then tap Join Session.';
+  };
+
+  window.joinSessionFromInput = function() {
+    const code = document.getElementById('session-input').value.trim();
+    if (!code || code.length < 4) {
+      document.getElementById('session-msg').style.color = 'var(--danger)';
+      document.getElementById('session-msg').textContent = 'Please enter a valid code.';
+      return;
+    }
+    closeModal('modal-session');
+    joinSession(code);
+  };
+
+  // ── Firebase persistence ─────────────────────────────────────────────────
+  function saveAll() {
+    if (!sessionCode) return;
+    const data = {};
+    contractions.forEach(c => { data[c.id] = c; });
+    set(ref(db, 'sessions/' + sessionCode), data);
+  }
+
+  function saveOne(c) {
+    if (!sessionCode) return;
+    set(ref(db, 'sessions/' + sessionCode + '/' + c.id), c);
+  }
+
+  function deleteOne(id) {
+    if (!sessionCode) return;
+    remove(ref(db, 'sessions/' + sessionCode + '/' + id));
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
   function fmtDuration(ms) {
     if (ms == null) return '--';
-    const s = Math.floor(ms / 1000), m = Math.floor(s / 60), r = s % 60;
-    return m > 0 ? m + 'm ' + r + 's' : s + 's';
+    const s = Math.floor(ms/1000), m = Math.floor(s/60), r = s%60;
+    return m > 0 ? m+'m '+r+'s' : s+'s';
   }
-
   function fmtTime(ts) {
-    return new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    return new Date(ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
   }
-
   function recomputeFrequencies() {
-    // newest-first; frequency = this.startTimestamp - prev.startTimestamp
     for (let i = 0; i < contractions.length; i++) {
-      const older = contractions[i + 1];
+      const older = contractions[i+1];
       contractions[i].frequency = older ? contractions[i].startTimestamp - older.startTimestamp : null;
     }
   }
+  function windowStats(ms) {
+    const cutoff = Date.now() - ms;
+    const w = contractions.filter(c => c.startTimestamp >= cutoff);
+    const count = w.length;
+    const avgDur = count ? w.reduce((s,c) => s+c.duration, 0)/count : null;
+    const fl = w.filter(c => c.frequency != null);
+    const avgFreq = fl.length ? fl.reduce((s,c) => s+c.frequency, 0)/fl.length : null;
+    return { count, avgDur, avgFreq };
+  }
 
-  function handlePress() {
+  // ── Main button ──────────────────────────────────────────────────────────
+  window.handlePress = function() {
+    if (!sessionCode) { window.openSessionModal(); return; }
     const now = Date.now();
     if (phase === 'idle') {
       startTime = now; elapsed = 0; phase = 'active';
@@ -405,257 +445,229 @@
       clearInterval(tickInterval);
       const duration = now - startTime;
       const last = contractions[0];
-      contractions.unshift({
+      const c = {
         id: String(now), startTimestamp: startTime, endTimestamp: now,
         startTime: fmtTime(startTime), duration,
         frequency: last ? now - last.startTimestamp : null
-      });
-      save(); phase = 'idle'; elapsed = 0;
+      };
+      saveOne(c); // Firebase listener will update contractions array
+      phase = 'idle'; elapsed = 0;
       document.body.classList.remove('active');
       document.getElementById('status-text').textContent = 'Waiting';
       document.getElementById('btn-top').textContent = 'Press to';
       document.getElementById('btn-main').textContent = 'Start';
       document.getElementById('btn-sub').textContent = 'contraction';
-      render();
     }
-  }
+  };
 
-  function clearAll() {
+  window.clearAll = function() {
     if (!confirm('Clear all contraction history?')) return;
-    contractions = []; save(); render();
-  }
+    if (!sessionCode) return;
+    set(ref(db, 'sessions/' + sessionCode), null);
+  };
 
-  function windowStats(ms) {
-    const cutoff = Date.now() - ms;
-    const w = contractions.filter(c => c.startTimestamp >= cutoff);
-    const count = w.length;
-    const avgDur = count ? w.reduce((s,c) => s + c.duration, 0) / count : null;
-    const fl = w.filter(c => c.frequency != null);
-    const avgFreq = fl.length ? fl.reduce((s,c) => s + c.frequency, 0) / fl.length : null;
-    return { count, avgDur, avgFreq };
-  }
-
-  function renderWindows() {
-    const w1 = windowStats(60 * 60 * 1000);
-    const w2 = windowStats(2 * 60 * 60 * 1000);
+  // ── Render ───────────────────────────────────────────────────────────────
+  function render() {
+    // Rolling windows
+    const w1 = windowStats(60*60*1000), w2 = windowStats(2*60*60*1000);
     document.getElementById('w1-count').textContent = w1.count || '--';
     document.getElementById('w1-dur').textContent   = fmtDuration(w1.avgDur);
     document.getElementById('w1-freq').textContent  = fmtDuration(w1.avgFreq);
     document.getElementById('w2-count').textContent = w2.count || '--';
     document.getElementById('w2-dur').textContent   = fmtDuration(w2.avgDur);
     document.getElementById('w2-freq').textContent  = fmtDuration(w2.avgFreq);
-  }
-
-  function render() {
-    renderWindows();
 
     const wrap = document.getElementById('history-wrap');
     const hint = document.getElementById('import-hint');
-    if (!contractions.length) { wrap.style.display = 'none'; hint.style.display = 'block'; return; }
-    wrap.style.display = 'block'; hint.style.display = 'none';
-    document.getElementById('history-list').innerHTML = contractions.map((c, i) =>
-      '<div class="contraction-row' + (i === 0 ? ' newest' : '') + '">' +
-        '<div class="cell"><div class="cell-time">' + c.startTime + '</div></div>' +
-        '<div class="cell"><div class="cell-main">' + fmtDuration(c.duration) + '</div></div>' +
-        '<div class="cell"><div class="cell-freq">' + (c.frequency ? fmtDuration(c.frequency) : '—') + '</div></div>' +
+    const nsHint = document.getElementById('no-session-hint');
+
+    if (!sessionCode) {
+      wrap.style.display = 'none';
+      hint.style.display = 'none';
+      nsHint.style.display = 'block';
+      return;
+    }
+    nsHint.style.display = 'none';
+
+    if (!contractions.length) {
+      wrap.style.display = 'none';
+      hint.style.display = 'block';
+      return;
+    }
+    wrap.style.display = 'block';
+    hint.style.display = 'none';
+
+    document.getElementById('history-list').innerHTML = contractions.map((c,i) =>
+      '<div class="contraction-row'+(i===0?' newest':'')+'">' +
+        '<div class="cell"><div class="cell-time">'+c.startTime+'</div></div>' +
+        '<div class="cell"><div class="cell-main">'+fmtDuration(c.duration)+'</div></div>' +
+        '<div class="cell"><div class="cell-freq">'+(c.frequency?fmtDuration(c.frequency):'—')+'</div></div>' +
         '<div class="row-actions">' +
-          '<button class="btn-icon edit" onclick="openEdit(\'' + c.id + '\')">✎</button>' +
-          '<button class="btn-icon del" onclick="openDelete(\'' + c.id + '\')">✕</button>' +
+          '<button class="btn-icon edit" onclick="openEditRow(\''+c.id+'\')">✎</button>' +
+          '<button class="btn-icon del" onclick="openDeleteRow(\''+c.id+'\')">✕</button>' +
         '</div>' +
       '</div>'
     ).join('');
   }
 
-  /* Edit */
-  function openEdit(id) {
+  // ── Edit ─────────────────────────────────────────────────────────────────
+  window.openEditRow = function(id) {
     editingId = id;
     const c = contractions.find(x => x.id === id); if (!c) return;
     const d = new Date(c.startTimestamp);
-    let h = d.getHours(); const ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+    let h = d.getHours(); const ampm = h >= 12 ? 'PM' : 'AM'; h = h%12||12;
     document.getElementById('edit-sh').value = h;
     document.getElementById('edit-sm').value = String(d.getMinutes()).padStart(2,'0');
     document.getElementById('edit-ss').value = String(d.getSeconds()).padStart(2,'0');
     document.getElementById('edit-ampm').value = ampm;
-    const totalSec = Math.floor(c.duration / 1000);
-    document.getElementById('edit-dm').value = Math.floor(totalSec / 60);
-    document.getElementById('edit-ds').value = totalSec % 60;
+    const totalSec = Math.floor(c.duration/1000);
+    document.getElementById('edit-dm').value = Math.floor(totalSec/60);
+    document.getElementById('edit-ds').value = totalSec%60;
     openModal('modal-edit');
-  }
+  };
 
-  function saveEdit() {
+  window.saveEdit = function() {
     const c = contractions.find(x => x.id === editingId); if (!c) return;
-    const sh = parseInt(document.getElementById('edit-sh').value) || 0;
-    const sm = parseInt(document.getElementById('edit-sm').value) || 0;
-    const ss = parseInt(document.getElementById('edit-ss').value) || 0;
+    const sh = parseInt(document.getElementById('edit-sh').value)||0;
+    const sm = parseInt(document.getElementById('edit-sm').value)||0;
+    const ss = parseInt(document.getElementById('edit-ss').value)||0;
     const ampm = document.getElementById('edit-ampm').value.trim().toUpperCase();
-    const dm = parseInt(document.getElementById('edit-dm').value) || 0;
-    const ds = parseInt(document.getElementById('edit-ds').value) || 0;
+    const dm = parseInt(document.getElementById('edit-dm').value)||0;
+    const ds = parseInt(document.getElementById('edit-ds').value)||0;
     const base = new Date(c.startTimestamp);
-    let h24 = sh % 12; if (ampm === 'PM') h24 += 12;
-    base.setHours(h24, sm, ss, 0);
+    let h24 = sh%12; if (ampm==='PM') h24+=12;
+    base.setHours(h24,sm,ss,0);
     c.startTimestamp = base.getTime();
-    c.duration = (dm * 60 + ds) * 1000;
-    c.endTimestamp = c.startTimestamp + c.duration;
+    c.duration = (dm*60+ds)*1000;
+    c.endTimestamp = c.startTimestamp+c.duration;
     c.startTime = fmtTime(c.startTimestamp);
-    contractions.sort((a, b) => b.startTimestamp - a.startTimestamp);
-    recomputeFrequencies(); save(); render();
+    contractions.sort((a,b) => b.startTimestamp-a.startTimestamp);
+    recomputeFrequencies();
+    saveAll();
     closeModal('modal-edit');
-  }
+  };
 
-  /* Delete */
-  function openDelete(id) {
+  // ── Delete ───────────────────────────────────────────────────────────────
+  window.openDeleteRow = function(id) {
     deletingId = id;
     const c = contractions.find(x => x.id === id); if (!c) return;
-    document.getElementById('del-detail').textContent = c.startTime + ' · ' + fmtDuration(c.duration);
+    document.getElementById('del-detail').textContent = c.startTime+' · '+fmtDuration(c.duration);
     openModal('modal-del');
-  }
+  };
 
-  function confirmDelete() {
-    contractions = contractions.filter(x => x.id !== deletingId);
-    recomputeFrequencies(); save(); render();
+  window.confirmDelete = function() {
+    deleteOne(deletingId);
     closeModal('modal-del');
-  }
+  };
 
-  /* Export */
-  function openExport() {
-    const w1 = windowStats(60 * 60 * 1000);
-    const w2 = windowStats(2 * 60 * 60 * 1000);
-    const lines = ['CONTRACTION LOG', '===============', ''];
+  // ── Export ───────────────────────────────────────────────────────────────
+  window.openExport = function() {
+    const w1=windowStats(60*60*1000), w2=windowStats(2*60*60*1000);
+    const lines=['CONTRACTION LOG','===============',''];
     lines.push('PAST 1 HOUR');
-    lines.push('  Count:        ' + (w1.count || 0));
-    lines.push('  Avg Duration: ' + fmtDuration(w1.avgDur));
-    lines.push('  Avg Frequency:' + fmtDuration(w1.avgFreq));
+    lines.push('  Count:        '+(w1.count||0));
+    lines.push('  Avg Duration: '+fmtDuration(w1.avgDur));
+    lines.push('  Avg Frequency:'+fmtDuration(w1.avgFreq));
     lines.push('');
     lines.push('PAST 2 HOURS');
-    lines.push('  Count:        ' + (w2.count || 0));
-    lines.push('  Avg Duration: ' + fmtDuration(w2.avgDur));
-    lines.push('  Avg Frequency:' + fmtDuration(w2.avgFreq));
+    lines.push('  Count:        '+(w2.count||0));
+    lines.push('  Avg Duration: '+fmtDuration(w2.avgDur));
+    lines.push('  Avg Frequency:'+fmtDuration(w2.avgFreq));
     lines.push('');
     lines.push('FULL HISTORY');
     lines.push('---------------');
-    contractions.forEach((c, i) => {
-      lines.push('#' + (contractions.length - i) + '  ' + c.startTime);
-      lines.push('   Duration:  ' + fmtDuration(c.duration));
-      lines.push('   Frequency: ' + (c.frequency ? fmtDuration(c.frequency) : 'N/A'));
+    contractions.forEach((c,i) => {
+      lines.push('#'+(contractions.length-i)+'  '+c.startTime);
+      lines.push('   Duration:  '+fmtDuration(c.duration));
+      lines.push('   Frequency: '+(c.frequency?fmtDuration(c.frequency):'N/A'));
       lines.push('');
     });
     document.getElementById('export-text').textContent = lines.join('\n');
     openModal('modal-export');
-  }
+  };
 
-  function copyExport() {
+  window.copyExport = function() {
     const text = document.getElementById('export-text').textContent;
     const btn = document.getElementById('copy-btn');
-    const done = () => { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy to Clipboard', 2000); };
+    const done = () => { btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy to Clipboard',2000); };
     if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done); }
-    else {
-      const ta = document.createElement('textarea'); ta.value = text;
-      ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta);
-      ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done();
-    }
-  }
+    else { const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done(); }
+  };
 
-  /* Import */
-  function openImport() {
+  // ── Import ───────────────────────────────────────────────────────────────
+  window.openImport = function() {
     document.getElementById('import-text').value = '';
     document.getElementById('import-msg').textContent = '';
     openModal('modal-import');
-  }
+  };
 
-  function doImport() {
+  window.doImport = function() {
+    if (!sessionCode) { openModal('modal-session'); return; }
     const raw = document.getElementById('import-text').value.trim();
     const msg = document.getElementById('import-msg');
-    if (!raw) { msg.style.color = 'var(--danger)'; msg.textContent = 'Nothing to import.'; return; }
-
-    // Parse lines like: "#3  10:45:02 AM"  "   Duration:  45s"  "   Frequency: 3m 12s"
+    if (!raw) { msg.style.color='var(--danger)'; msg.textContent='Nothing to import.'; return; }
     const parsed = [];
     const lines = raw.split('\n');
     let i = 0;
     while (i < lines.length) {
       const line = lines[i].trim();
-      // Match entry header: starts with # followed by number, then time
       if (/^#\d+\s+/.test(line)) {
-        const timeStr = line.replace(/^#\d+\s+/, '').trim();
-        const durLine = (lines[i+1] || '').trim();   // "Duration:  45s"
-        const freqLine = (lines[i+2] || '').trim();  // "Frequency: 3m 12s"
-
-        const dur = parseDuration(durLine.replace(/^Duration:\s*/i, ''));
-        if (dur === null) { i++; continue; }
-
-        // Parse the time string into a timestamp using today's date as base
-        // timeStr is like "10:45:02 AM" or "10:45:02 am"
+        const timeStr = line.replace(/^#\d+\s+/,'').trim();
+        const durLine = (lines[i+1]||'').trim();
+        const freqLine = (lines[i+2]||'').trim();
+        const dur = parseDuration(durLine.replace(/^Duration:\s*/i,''));
+        if (dur===null) { i++; continue; }
         const ts = parseTimeToTimestamp(timeStr);
-        if (ts === null) { i++; continue; }
-
-        const freq = parseFrequency(freqLine.replace(/^Frequency:\s*/i, ''));
-
-        parsed.push({
-          id: String(ts) + '_imp_' + Math.random().toString(36).slice(2,6),
-          startTimestamp: ts,
-          endTimestamp: ts + dur,
-          startTime: fmtTime(ts),
-          duration: dur,
-          frequency: freq
-        });
-        i += 3;
-      } else {
-        i++;
-      }
+        if (ts===null) { i++; continue; }
+        const freq = parseFrequency(freqLine.replace(/^Frequency:\s*/i,''));
+        parsed.push({ id: String(ts)+'_imp_'+Math.random().toString(36).slice(2,6), startTimestamp:ts, endTimestamp:ts+dur, startTime:fmtTime(ts), duration:dur, frequency:freq });
+        i+=3;
+      } else { i++; }
     }
-
-    if (!parsed.length) {
-      msg.style.color = 'var(--danger)';
-      msg.textContent = 'No valid entries found. Make sure you paste the full exported text.';
-      return;
-    }
-
-    // Merge: skip entries whose startTimestamp is already within 5s of an existing one
-    let added = 0;
+    if (!parsed.length) { msg.style.color='var(--danger)'; msg.textContent='No valid entries found.'; return; }
+    let added=0;
     parsed.forEach(p => {
-      const dup = contractions.some(c => Math.abs(c.startTimestamp - p.startTimestamp) < 5000);
+      const dup = contractions.some(c => Math.abs(c.startTimestamp-p.startTimestamp)<5000);
       if (!dup) { contractions.push(p); added++; }
     });
-
-    contractions.sort((a, b) => b.startTimestamp - a.startTimestamp);
-    recomputeFrequencies(); save(); render();
-
-    msg.style.color = '#80d0a0';
-    msg.textContent = added + ' entries imported' + (parsed.length - added > 0 ? ', ' + (parsed.length - added) + ' duplicates skipped.' : '.');
-    setTimeout(() => closeModal('modal-import'), 1800);
-  }
+    contractions.sort((a,b)=>b.startTimestamp-a.startTimestamp);
+    recomputeFrequencies();
+    saveAll();
+    msg.style.color='#80d0a0';
+    msg.textContent=added+' entries imported'+(parsed.length-added>0?', '+(parsed.length-added)+' duplicates skipped.':'.');
+    setTimeout(()=>closeModal('modal-import'),1800);
+  };
 
   function parseDuration(str) {
-    // "45s" or "3m 12s" or "3m 0s" or "--"
-    if (!str || str === '--' || str === 'N/A') return null;
-    const mMatch = str.match(/(\d+)m/); const sMatch = str.match(/(\d+)s/);
-    const m = mMatch ? parseInt(mMatch[1]) : 0;
-    const s = sMatch ? parseInt(sMatch[1]) : 0;
-    const total = (m * 60 + s) * 1000;
-    return total > 0 ? total : null;
+    if (!str||str==='--'||str==='N/A') return null;
+    const mM=str.match(/(\d+)m/), sM=str.match(/(\d+)s/);
+    const m=mM?parseInt(mM[1]):0, s=sM?parseInt(sM[1]):0;
+    const total=(m*60+s)*1000; return total>0?total:null;
   }
-
   function parseFrequency(str) {
-    if (!str || str === '--' || str === 'N/A' || str === '—') return null;
+    if (!str||str==='--'||str==='N/A'||str==='—') return null;
     return parseDuration(str);
   }
-
   function parseTimeToTimestamp(str) {
-    // str like "10:45:02 AM" — use today's date as the base
-    const m = str.match(/(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)?/i);
-    if (!m) return null;
-    let h = parseInt(m[1]), min = parseInt(m[2]), sec = parseInt(m[3]);
-    const ampm = (m[4] || '').toUpperCase();
-    if (ampm === 'PM' && h !== 12) h += 12;
-    if (ampm === 'AM' && h === 12) h = 0;
-    const d = new Date(); d.setHours(h, min, sec, 0);
-    return d.getTime();
+    const m=str.match(/(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)?/i); if (!m) return null;
+    let h=parseInt(m[1]),min=parseInt(m[2]),sec=parseInt(m[3]);
+    const ampm=(m[4]||'').toUpperCase();
+    if (ampm==='PM'&&h!==12) h+=12; if (ampm==='AM'&&h===12) h=0;
+    const d=new Date(); d.setHours(h,min,sec,0); return d.getTime();
   }
 
-  function openModal(id) { document.getElementById(id).classList.add('open'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-  function closeModalOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+  // ── Modal helpers ─────────────────────────────────────────────────────────
+  window.openModal  = function(id) { document.getElementById(id).classList.add('open'); };
+  window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); };
+  window.closeModalOutside = function(e,id) { if (e.target===document.getElementById(id)) closeModal(id); };
 
-  render();
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  const saved = loadSavedSession();
+  if (saved && saved.code) {
+    joinSession(saved.code);
+  } else {
+    render();
+  }
 </script>
 </body>
 </html>
