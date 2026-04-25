@@ -137,6 +137,21 @@
     .session-option-title { font-size: 14px; color: var(--text); margin-bottom: 4px; }
     .session-option-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
     .session-divider { text-align: center; font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin: 4px 0 10px; }
+
+    /* View-only mode */
+    .btn-viewonly { background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 3px 9px; border-radius: 4px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Lato', sans-serif; touch-action: manipulation; transition: color 0.2s, border-color 0.2s; }
+    body.viewonly .btn-viewonly { color: #f0c060; border-color: #f0c060; }
+    body.viewonly #main-btn { cursor: default; opacity: 0.55; border-color: rgba(100,80,140,0.3); background: radial-gradient(circle at 38% 34%, #130a28, #080412); box-shadow: none; }
+    body.viewonly .ripple-ring { display: none; }
+    .lock-icon { font-size: 36px; display: none; }
+    body.viewonly .lock-icon { display: block; }
+    body.viewonly .btn-top { display: none; }
+    body.viewonly .btn-main { display: none; }
+    body.viewonly .btn-sub { display: none; }
+    body.viewonly .btn-icon { display: none; }
+    body.viewonly #status-text { color: transparent; font-size: 0; }
+    body.viewonly #status-text::before { content: 'View Only'; font-size: 10px; color: #a08040; letter-spacing: 0.14em; text-transform: uppercase; }
+    body.viewonly .dot { background: #a08040; box-shadow: none; animation: none; }
   </style>
 </head>
 <body>
@@ -148,7 +163,10 @@
       <div class="session-dot"></div>
       <div class="session-code">Live · Code: <span id="session-code-display"></span></div>
     </div>
-    <button class="btn-leave" onclick="leaveSession()">Leave</button>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="btn-viewonly" id="btn-viewonly" onclick="toggleViewOnly()">View Only</button>
+      <button class="btn-leave" onclick="leaveSession()">Leave</button>
+    </div>
   </div>
 
   <div class="header">
@@ -179,6 +197,7 @@
     <div class="ripple-ring r1"></div>
     <div class="ripple-ring r2"></div>
     <button id="main-btn" onclick="handlePress()">
+      <div class="lock-icon">🔒</div>
       <div class="btn-top" id="btn-top">Press to</div>
       <div class="btn-main" id="btn-main">Start</div>
       <div class="btn-sub" id="btn-sub">contraction</div>
@@ -216,6 +235,20 @@
     <div class="history-list" id="history-list"></div>
   </div>
 
+</div>
+
+<!-- Unlock confirm modal -->
+<div class="modal-bg" id="modal-unlock" onclick="closeModalOutside(event,'modal-unlock')">
+  <div class="modal">
+    <div class="modal-title">Enable Timing?</div>
+    <div style="font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:4px;">
+      Switch back to active timing mode? The timer button will become active and you'll be able to log contractions again.
+    </div>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="confirmUnlock()">Enable Timing</button>
+      <button class="btn-secondary" onclick="closeModal('modal-unlock')">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <!-- Session modal -->
@@ -324,6 +357,25 @@
   let contractions = [];
   let editingId = null, deletingId = null;
   let sessionCode = null, dbListener = null;
+  let viewOnly = false;
+
+  // ── View-only mode ────────────────────────────────────────────────────────
+  window.toggleViewOnly = function() {
+    if (!viewOnly) {
+      // Enabling view-only — do it immediately, no confirmation needed
+      viewOnly = true;
+      document.body.classList.add('viewonly');
+    } else {
+      // Disabling — require confirmation
+      openModal('modal-unlock');
+    }
+  };
+
+  window.confirmUnlock = function() {
+    viewOnly = false;
+    document.body.classList.remove('viewonly');
+    closeModal('modal-unlock');
+  };
 
   // ── Session ──────────────────────────────────────────────────────────────
   function loadSavedSession() {
@@ -429,6 +481,7 @@
 
   // ── Main button ──────────────────────────────────────────────────────────
   window.handlePress = function() {
+    if (viewOnly) return; // locked
     if (!sessionCode) { window.openSessionModal(); return; }
     const now = Date.now();
     if (phase === 'idle') {
