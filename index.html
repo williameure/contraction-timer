@@ -57,17 +57,18 @@ body.viewonly .btn-viewonly { color: #f0c060; border-color: #f0c060; }
 
 /* ── Rolling window cards ── */
 .windows { display: flex; gap: 10px; margin: 18px 0 0; width: 100%; max-width: 440px; }
-.window-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 10px 12px; display: flex; flex-direction: column; gap: 10px; }
+.window-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 10px 14px; display: flex; flex-direction: column; gap: 10px; }
 .window-header { display: flex; align-items: center; justify-content: center; gap: 5px; padding-bottom: 8px; border-bottom: 1px solid rgba(80,50,130,0.25); }
 .window-label { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
 .trend-arrow { font-size: 13px; line-height: 1; }
 .trend-up { color: var(--green); }
 .trend-down { color: var(--red); }
 .trend-neutral { color: var(--text-dim); opacity: 0.4; }
-.window-stats { display: flex; justify-content: space-around; }
-.wstat { text-align: center; }
-.wstat-value { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--accent); line-height: 1; }
-.wstat-label { font-size: 8px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+.window-stats { display: flex; justify-content: space-around; align-items: flex-start; }
+.wstat { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.wstat-label { font-size: 8px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+.wstat-value { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); line-height: 1; }
+.wstat-value.large { font-size: 36px; }
 
 /* ── Hospital progress bar ── */
 .progress-wrap { width: 100%; max-width: 440px; margin: 14px 0 24px; }
@@ -221,9 +222,9 @@ body.active .status-text { color: var(--accent-dim); }
         <span class="trend-arrow" id="w1-trend"></span>
       </div>
       <div class="window-stats">
-        <div class="wstat"><div class="wstat-value" id="w1-count">--</div><div class="wstat-label">Count</div></div>
-        <div class="wstat"><div class="wstat-value" id="w1-dur">--</div><div class="wstat-label">Avg Dur</div></div>
-        <div class="wstat"><div class="wstat-value" id="w1-freq">--</div><div class="wstat-label">Avg Freq</div></div>
+        <div class="wstat"><div class="wstat-label">Count</div><div class="wstat-value large" id="w1-count">--</div></div>
+        <div class="wstat"><div class="wstat-label">Avg Dur</div><div class="wstat-value" id="w1-dur">--</div></div>
+        <div class="wstat"><div class="wstat-label">Avg Freq</div><div class="wstat-value" id="w1-freq">--</div></div>
       </div>
     </div>
     <div class="window-card">
@@ -232,9 +233,9 @@ body.active .status-text { color: var(--accent-dim); }
         <span class="trend-arrow" id="w2-trend"></span>
       </div>
       <div class="window-stats">
-        <div class="wstat"><div class="wstat-value" id="w2-count">--</div><div class="wstat-label">Count</div></div>
-        <div class="wstat"><div class="wstat-value" id="w2-dur">--</div><div class="wstat-label">Avg Dur</div></div>
-        <div class="wstat"><div class="wstat-value" id="w2-freq">--</div><div class="wstat-label">Avg Freq</div></div>
+        <div class="wstat"><div class="wstat-label">Count</div><div class="wstat-value large" id="w2-count">--</div></div>
+        <div class="wstat"><div class="wstat-label">Avg Dur</div><div class="wstat-value" id="w2-dur">--</div></div>
+        <div class="wstat"><div class="wstat-label">Avg Freq</div><div class="wstat-value" id="w2-freq">--</div></div>
       </div>
     </div>
   </div>
@@ -286,7 +287,6 @@ body.active .status-text { color: var(--accent-dim); }
       <div class="btn-row">
         <button class="btn-small" onclick="openExport()">Export</button>
         <button class="btn-small" onclick="openImport()">Import</button>
-        <button class="btn-small" onclick="clearAll()">Clear All</button>
       </div>
     </div>
     <div class="col-heads">
