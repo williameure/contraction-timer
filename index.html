@@ -64,11 +64,12 @@ body.viewonly .btn-viewonly { color: #f0c060; border-color: #f0c060; }
 .trend-up { color: var(--green); }
 .trend-down { color: var(--red); }
 .trend-neutral { color: var(--text-dim); opacity: 0.4; }
-.window-stats { display: flex; justify-content: space-around; align-items: flex-start; }
-.wstat { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.window-stats { display: flex; justify-content: space-around; align-items: flex-start; gap: 4px; }
+.wstat { text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; }
 .wstat-label { font-size: 8px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
-.wstat-value { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); line-height: 1; }
-.wstat-value.large { font-size: 36px; }
+.wstat-value { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); line-height: 1.15; }
+.wstat-value.large { font-size: 36px; line-height: 1; }
+.wstat-divider { width: 1px; background: rgba(80,50,130,0.3); align-self: stretch; margin-top: 20px; }
 
 /* ── Hospital progress bar ── */
 .progress-wrap { width: 100%; max-width: 440px; margin: 14px 0 24px; }
@@ -601,17 +602,25 @@ body.active .status-text { color: var(--accent-dim); }
     set(ref(db, 'sessions/' + sessionCode), null);
   };
 
+  // ── Stacked duration formatter ────────────────────────────────────────────
+  function fmtStacked(ms) {
+    if (ms == null) return '<span>--</span>';
+    const s = Math.floor(ms/1000), m = Math.floor(s/60), r = s%60;
+    if (m > 0) return '<span>'+m+'m</span><span>'+r+'s</span>';
+    return '<span>'+s+'s</span>';
+  }
+
   // ── Render ───────────────────────────────────────────────────────────────
   function render() {
     const w1 = windowStats(60*60*1000), w2 = windowStats(2*60*60*1000);
 
     // Window stats
     document.getElementById('w1-count').textContent = w1.count || '--';
-    document.getElementById('w1-dur').textContent   = fmtDuration(w1.avgDur);
-    document.getElementById('w1-freq').textContent  = fmtDuration(w1.avgFreq);
+    document.getElementById('w1-dur').innerHTML   = fmtStacked(w1.avgDur);
+    document.getElementById('w1-freq').innerHTML  = fmtStacked(w1.avgFreq);
     document.getElementById('w2-count').textContent = w2.count || '--';
-    document.getElementById('w2-dur').textContent   = fmtDuration(w2.avgDur);
-    document.getElementById('w2-freq').textContent  = fmtDuration(w2.avgFreq);
+    document.getElementById('w2-dur').innerHTML   = fmtStacked(w2.avgDur);
+    document.getElementById('w2-freq').innerHTML  = fmtStacked(w2.avgFreq);
 
     // Trend arrows — compare 1hr freq vs 2hr freq
     document.getElementById('w1-trend').innerHTML = trendArrow(w1.avgFreq, w2.avgFreq);
